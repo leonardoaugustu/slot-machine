@@ -11,7 +11,22 @@ var Game = (function () {
     var assetManifest = [
         { id: "placeholder", src: "./Assets/images/placeholder.png" },
         { id: "startButton", src: "./Assets/images/startButton.png" },
-        { id: "backButton", src: "./Assets/images/backButton.png" }
+        { id: "backButton", src: "./Assets/images/backButton.png" },
+        { id: "slotMachine", src: "./Assets/images/slot-machine.png" },
+        { id: "emptyReel", src: "./Assets/images/empty-reel.png" },
+        { id: "resetButton", src: "./Assets/images/reset-button.png" },
+        { id: "quitButton", src: "./Assets/images/quit-button.png" },
+        { id: "betOneButton", src: "./Assets/images/betone-button.png" },
+        { id: "betMaxButton", src: "./Assets/images/betmax-button.png" },
+        { id: "spinButton", src: "./Assets/images/spin-button.png" },
+        { id: "banana", src: "./Assets/images/banana.png" },
+        { id: "bar", src: "./Assets/images/bar.png" },
+        { id: "bell", src: "./Assets/images/bell.png" },
+        { id: "blank", src: "./Assets/images/blank.png" },
+        { id: "cherry", src: "./Assets/images/cherry.png" },
+        { id: "grapes", src: "./Assets/images/grapes.png" },
+        { id: "orange", src: "./Assets/images/orange.png" },
+        { id: "seven", src: "./Assets/images/seven.png" },
     ];
     function Preload() {
         assets = new createjs.LoadQueue(); // asset container
@@ -30,7 +45,7 @@ var Game = (function () {
         createjs.Ticker.on('tick', Update);
         stage.enableMouseOver(20);
         currentSceneState = scenes.State.NO_SCENE;
-        config.Game.SCENE = scenes.State.START;
+        config.Game.SCENE = scenes.State.PLAY;
     }
     /**
      * This function is triggered every frame (16ms)
@@ -56,10 +71,6 @@ var Game = (function () {
         }
         // switch to the new scene
         switch (config.Game.SCENE) {
-            case scenes.State.START:
-                console.log("switch to Start Scene");
-                currentScene = new scenes.Start();
-                break;
             case scenes.State.PLAY:
                 console.log("switch to Play Scene");
                 currentScene = new scenes.Play();

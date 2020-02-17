@@ -40,5 +40,16 @@ module util
         {
             return a + (b - a) * t;
         }
+
+        /* Utility function to check if a value falls within a range of bounds */
+        public static CheckRange(value:number, lowerBounds:number, upperBounds:number) {
+            if (value >= lowerBounds && value <= upperBounds)
+            {
+                return value;
+            }
+            else {
+                return !value;
+            }
+        }        
     }
 }

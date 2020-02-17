@@ -28,6 +28,15 @@ var util;
         Math.LerpUnclamped = function (a, b, t) {
             return a + (b - a) * t;
         };
+        /* Utility function to check if a value falls within a range of bounds */
+        Math.CheckRange = function (value, lowerBounds, upperBounds) {
+            if (value >= lowerBounds && value <= upperBounds) {
+                return value;
+            }
+            else {
+                return !value;
+            }
+        };
         return Math;
     }());
     util.Math = Math;
