@@ -19,14 +19,6 @@ var objects;
         // CONSTRUCTOR
         function SlotMachine() {
             var _this = _super.call(this, config.Game.ASSETS.getResult("slotMachine"), 0, 0, false) || this;
-            _this._grapes = 0;
-            _this._bananas = 0;
-            _this._oranges = 0;
-            _this._cherries = 0;
-            _this._bars = 0;
-            _this._bells = 0;
-            _this._sevens = 0;
-            _this._blanks = 0;
             _this.Start();
             return _this;
         }
@@ -61,6 +53,16 @@ var objects;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(SlotMachine.prototype, "jackpot", {
+            get: function () {
+                return this._jackpot;
+            },
+            set: function (newJackpot) {
+                this._jackpot = newJackpot;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(SlotMachine.prototype, "betLine", {
             get: function () {
                 return this._betLine;
@@ -74,6 +76,17 @@ var objects;
         // PRIVATE METHODS
         SlotMachine.prototype._checkBounds = function () {
         };
+        /* Utility function to reset all fruit tallies */
+        SlotMachine.prototype._resetFruitTally = function () {
+            this._grapes = 0;
+            this._bananas = 0;
+            this._oranges = 0;
+            this._cherries = 0;
+            this._bars = 0;
+            this._bells = 0;
+            this._sevens = 0;
+            this._blanks = 0;
+        };
         // PUBLIC METHODS
         SlotMachine.prototype.Start = function () {
             var reelOne = new objects.Reel(88, 213);
@@ -83,11 +96,26 @@ var objects;
             this.Reset();
         };
         SlotMachine.prototype.Update = function () {
+            this._betLine.forEach(function (reel) { return reel.Update(); });
         };
         SlotMachine.prototype.Reset = function () {
             this.credits = 1000;
             this.bet = 10;
             this.winnings = 0;
+            this.jackpot = 5000;
+            this._resetFruitTally();
+            this._betLine.forEach(function (reel) { return reel.Reset(); });
+        };
+        /* Check to see if the player won the jackpot */
+        SlotMachine.prototype.CheckJackPot = function () {
+            /* compare two random values */
+            var jackPotTry = Math.floor(Math.random() * 51 + 1);
+            var jackPotWin = Math.floor(Math.random() * 51 + 1);
+            var result = (jackPotTry == jackPotWin);
+            if (result) {
+                this._winnings += this._jackpot;
+            }
+            return result;
         };
         /* When this function is called it determines the this._betLine results.
         e.g. Bar - Orange - Banana */
@@ -97,35 +125,35 @@ var objects;
                 outCome[spin] = Math.floor((Math.random() * 65) + 1);
                 switch (outCome[spin]) {
                     case util.Math.CheckRange(outCome[spin], 1, 27): // 41.5% probability
-                        this._betLine[spin].image = config.Game.ASSETS.getResult("blank");
+                        this._betLine[spin].symbol = objects.Symbol.BLANK;
                         this._blanks++;
                         break;
                     case util.Math.CheckRange(outCome[spin], 28, 37): // 15.4% probability
-                        this._betLine[spin].image = config.Game.ASSETS.getResult("grapes");
+                        this._betLine[spin].symbol = objects.Symbol.GRAPES;
                         this._grapes++;
                         break;
                     case util.Math.CheckRange(outCome[spin], 38, 46): // 13.8% probability
-                        this._betLine[spin].image = config.Game.ASSETS.getResult("banana");
+                        this._betLine[spin].symbol = objects.Symbol.BANANA;
                         this._bananas++;
                         break;
                     case util.Math.CheckRange(outCome[spin], 47, 54): // 12.3% probability
-                        this._betLine[spin].image = config.Game.ASSETS.getResult("orange");
+                        this._betLine[spin].symbol = objects.Symbol.ORANGE;
                         this._oranges++;
                         break;
                     case util.Math.CheckRange(outCome[spin], 55, 59): //  7.7% probability
-                        this._betLine[spin].image = config.Game.ASSETS.getResult("cherry");
+                        this._betLine[spin].symbol = objects.Symbol.CHERRY;
                         this._cherries++;
                         break;
                     case util.Math.CheckRange(outCome[spin], 60, 62): //  4.6% probability
-                        this._betLine[spin].image = config.Game.ASSETS.getResult("bar");
+                        this._betLine[spin].symbol = objects.Symbol.BAR;
                         this._bars++;
                         break;
                     case util.Math.CheckRange(outCome[spin], 63, 64): //  3.1% probability
-                        this._betLine[spin].image = config.Game.ASSETS.getResult("bell");
+                        this._betLine[spin].symbol = objects.Symbol.BELL;
                         this._bells++;
                         break;
                     case util.Math.CheckRange(outCome[spin], 65, 65): //  1.5% probability
-                        this._betLine[spin].image = config.Game.ASSETS.getResult("seven");
+                        this._betLine[spin].symbol = objects.Symbol.SEVEN;
                         this._sevens++;
                         break;
                 }
@@ -133,58 +161,64 @@ var objects;
         };
         /* This function calculates the player's winnings, if any */
         SlotMachine.prototype.DetermineWinnings = function () {
+            var result = false;
             if (this._blanks == 0) {
+                var roundWinnings = 0;
                 if (this._grapes == 3) {
-                    this.winnings = this._bet * 10;
+                    roundWinnings = this._bet * 10;
                 }
                 else if (this._bananas == 3) {
-                    this.winnings = this._bet * 20;
+                    roundWinnings = this._bet * 20;
                 }
                 else if (this._oranges == 3) {
-                    this.winnings = this._bet * 30;
+                    roundWinnings = this._bet * 30;
                 }
                 else if (this._cherries == 3) {
-                    this.winnings = this._bet * 40;
+                    roundWinnings = this._bet * 40;
                 }
                 else if (this._bars == 3) {
-                    this.winnings = this._bet * 50;
+                    roundWinnings = this._bet * 50;
                 }
                 else if (this._bells == 3) {
-                    this.winnings = this._bet * 75;
+                    roundWinnings = this._bet * 75;
                 }
                 else if (this._sevens == 3) {
-                    this.winnings = this._bet * 100;
+                    roundWinnings = this._bet * 100;
                 }
                 else if (this._grapes == 2) {
-                    this.winnings = this._bet * 2;
+                    roundWinnings = this._bet * 2;
                 }
                 else if (this._bananas == 2) {
-                    this.winnings = this._bet * 2;
+                    roundWinnings = this._bet * 2;
                 }
                 else if (this._oranges == 2) {
-                    this.winnings = this._bet * 3;
+                    roundWinnings = this._bet * 3;
                 }
                 else if (this._cherries == 2) {
-                    this.winnings = this._bet * 4;
+                    roundWinnings = this._bet * 4;
                 }
                 else if (this._bars == 2) {
-                    this.winnings = this._bet * 5;
+                    roundWinnings = this._bet * 5;
                 }
                 else if (this._bells == 2) {
-                    this.winnings = this._bet * 10;
+                    roundWinnings = this._bet * 10;
                 }
                 else if (this._sevens == 2) {
-                    this.winnings = this._bet * 20;
+                    roundWinnings = this._bet * 20;
                 }
                 else if (this._sevens == 1) {
-                    this.winnings = this._bet * 5;
+                    roundWinnings = this._bet * 5;
                 }
                 else {
-                    this.winnings = this._bet * 1;
+                    roundWinnings = this._bet * 1;
                 }
-                return true;
+                result = true;
+                this.credits += roundWinnings;
+                this.winnings += roundWinnings;
             }
-            return false;
+            this._credits -= this._bet;
+            this._resetFruitTally();
+            return result;
         };
         return SlotMachine;
     }(objects.GameObject));

@@ -8,7 +8,8 @@ module objects
             public fontSize: string = "12px", 
             public fontFamily: string = "Consolas",
             public fontColour: string = "#000000",
-            x: number = 0, y: number = 0, public isCentered:boolean = false)
+            x: number = 0, y: number = 0, public isCentered:boolean = false,
+            lineWidth: number = 500)
             {
                 super(labelString, fontSize + " " + fontFamily, fontColour);
 
@@ -20,6 +21,8 @@ module objects
 
                 this.x = x;
                 this.y = y;
+
+                this.lineWidth = lineWidth;
             }
 
         // methods

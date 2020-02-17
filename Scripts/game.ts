@@ -8,6 +8,7 @@ let Game = (function(){
     
     let currentSceneState:scenes.State;
     let currentScene: objects.Scene;
+    let playScene: scenes.Play;
 
     let assets: createjs.LoadQueue;
 
@@ -16,15 +17,16 @@ let Game = (function(){
         {id:"placeholder", src:"./Assets/images/placeholder.png"},
         {id:"startButton", src:"./Assets/images/startButton.png"},
         {id:"backButton", src:"./Assets/images/backButton.png"},
+        {id:"backgroundEnd", src:"./Assets/images/background-end.jpg"},
         
         {id:"slotMachine", src:"./Assets/images/slot-machine.png"},
-        {id:"emptyReel", src:"./Assets/images/empty-reel.png"},
         {id:"resetButton", src:"./Assets/images/reset-button.png"},
         {id:"quitButton", src:"./Assets/images/quit-button.png"},
         {id:"betOneButton", src:"./Assets/images/betone-button.png"},
         {id:"betMaxButton", src:"./Assets/images/betmax-button.png"},
         {id:"spinButton", src:"./Assets/images/spin-button.png"},
         
+        {id:"empty", src:"./Assets/images/empty-reel.png"},
         {id:"banana", src:"./Assets/images/banana.png"},
         {id:"bar", src:"./Assets/images/bar.png"},
         {id:"bell", src:"./Assets/images/bell.png"},
@@ -96,11 +98,12 @@ let Game = (function(){
         {
             case scenes.State.PLAY:
                 console.log("switch to Play Scene");
-                currentScene = new scenes.Play(); 
+                playScene = new scenes.Play(); 
+                currentScene = playScene;
                 break;
             case scenes.State.END:
                 console.log("switch to End Scene");
-                currentScene = new scenes.End(); 
+                currentScene = new scenes.End(playScene); 
                 break;
         }
 

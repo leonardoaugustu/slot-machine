@@ -17,7 +17,7 @@ var objects;
     var Label = /** @class */ (function (_super) {
         __extends(Label, _super);
         // constructor
-        function Label(labelString, fontSize, fontFamily, fontColour, x, y, isCentered) {
+        function Label(labelString, fontSize, fontFamily, fontColour, x, y, isCentered, lineWidth) {
             if (labelString === void 0) { labelString = "empty label"; }
             if (fontSize === void 0) { fontSize = "12px"; }
             if (fontFamily === void 0) { fontFamily = "Consolas"; }
@@ -25,6 +25,7 @@ var objects;
             if (x === void 0) { x = 0; }
             if (y === void 0) { y = 0; }
             if (isCentered === void 0) { isCentered = false; }
+            if (lineWidth === void 0) { lineWidth = 500; }
             var _this = _super.call(this, labelString, fontSize + " " + fontFamily, fontColour) || this;
             _this.labelString = labelString;
             _this.fontSize = fontSize;
@@ -37,6 +38,7 @@ var objects;
             }
             _this.x = x;
             _this.y = y;
+            _this.lineWidth = lineWidth;
             return _this;
         }
         // methods

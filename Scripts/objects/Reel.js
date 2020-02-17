@@ -14,26 +14,52 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var objects;
 (function (objects) {
+    var Symbol;
+    (function (Symbol) {
+        Symbol[Symbol["EMPTY"] = 0] = "EMPTY";
+        Symbol[Symbol["BANANA"] = 1] = "BANANA";
+        Symbol[Symbol["BAR"] = 2] = "BAR";
+        Symbol[Symbol["BELL"] = 3] = "BELL";
+        Symbol[Symbol["BLANK"] = 4] = "BLANK";
+        Symbol[Symbol["CHERRY"] = 5] = "CHERRY";
+        Symbol[Symbol["GRAPES"] = 6] = "GRAPES";
+        Symbol[Symbol["ORANGE"] = 7] = "ORANGE";
+        Symbol[Symbol["SEVEN"] = 8] = "SEVEN";
+    })(Symbol = objects.Symbol || (objects.Symbol = {}));
     var Reel = /** @class */ (function (_super) {
         __extends(Reel, _super);
-        // PRIVATE INSTANCE MEMBERS
-        // PUBLIC PROPERTIES
         // CONSTRUCTOR
         function Reel(x, y, centered) {
             if (x === void 0) { x = 0; }
             if (y === void 0) { y = 0; }
             if (centered === void 0) { centered = false; }
-            return _super.call(this, config.Game.ASSETS.getResult("emptyReel"), x, y, centered) || this;
+            var _this = _super.call(this, config.Game.ASSETS.getResult("empty"), x, y, centered) || this;
+            _this.Start();
+            return _this;
         }
+        Object.defineProperty(Reel.prototype, "symbol", {
+            // PUBLIC PROPERTIES
+            get: function () {
+                return this._symbol;
+            },
+            set: function (newSymbol) {
+                this._symbol = newSymbol;
+            },
+            enumerable: true,
+            configurable: true
+        });
         // PRIVATE METHODS
         Reel.prototype._checkBounds = function () {
         };
         // PUBLIC METHODS
         Reel.prototype.Start = function () {
+            this._symbol = Symbol.EMPTY;
         };
         Reel.prototype.Update = function () {
+            this.image = config.Game.ASSETS.getResult(objects.Symbol[this.symbol].toLowerCase());
         };
         Reel.prototype.Reset = function () {
+            this._symbol = Symbol.EMPTY;
         };
         return Reel;
     }(objects.GameObject));
